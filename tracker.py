@@ -3,11 +3,14 @@ import matplotlib.dates as mdates
 import mplcursors
 from collections import Counter
 from datetime import datetime
+import subprocess
 
 def read_data_from_file(filename):
+    """Reads data from a file, skipping the first line."""
     data = []
     try:
         with open(filename, 'r') as file:
+            next(file)  # Skip the first line
             for line in file:
                 data.append(line.strip())
     except FileNotFoundError:
@@ -16,7 +19,29 @@ def read_data_from_file(filename):
         print(f"Error: Unable to read file '{filename}'.")
     return data
 
-# Read data from data.txt
+def get_note_content(note_title):
+    """Retrieves the content of a note from the Notes app using AppleScript."""
+    applescript = f'''
+    tell application "Notes"
+        set theNote to the first note whose name is "{note_title}"
+        set noteContent to body of theNote
+    end tell
+    return noteContent
+    '''
+    process = subprocess.run(['osascript', '-e', applescript], capture_output=True, text=True)
+    return process.stdout.strip()
+
+def write_note_to_file(note_content, filename="data.txt"):
+    """Writes note content to a file, overwriting existing content."""
+    with open(filename, 'w') as file:
+        file.write(note_content.replace("<div>", "").replace("</div>", ""))
+
+# Retrieve note content and write to file
+note_title = "LILLA ARCEN"  # Replace with your note's title
+note_content = get_note_content(note_title)
+write_note_to_file(note_content)
+
+# Read data from the updated file
 filename = "data.txt"
 data = read_data_from_file(filename)
 
@@ -25,7 +50,6 @@ dates = []
 weights = []
 distances = {}
 activities = []
-
 year = None
 
 for item in data:
@@ -46,21 +70,18 @@ for item in data:
         # Strip whitespace from activity
         activity = activity.strip()
         
-        if weightOrDistance == None:
+        if weightOrDistance is None:
             weightOrDistance = weights[-1]
-        elif activity == 'run' or activity == "löpning":
-            distances[len(activities)] = (float(weightOrDistance[:-2]))
+        elif activity in ['run', 'löpning']:
+            distances[len(activities)] = float(weightOrDistance[:-2])
             weightOrDistance = weights[-1]
         else:
             weightOrDistance = float(weightOrDistance[:-2])
-            
         
-
         full_date = f"{day}/{month}/{year}"
-        
         dates.append(full_date)
         weights.append(weightOrDistance)
-        activities.append(activity.strip())
+        activities.append(activity)
 
 # Convert date strings to datetime objects
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
@@ -72,7 +93,7 @@ plt.figure(figsize=(10, 6))
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
 
 # Add a line plot to connect the points
-line, = plt.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
+plt.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
 
 # Plot each point with the corresponding activity color
 scatter = plt.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
@@ -114,10 +135,10 @@ plt.legend(
 
 # Set labels and title
 plt.xlabel('Date')
-plt.ylabel('Weight (kg)')  # Updated y-axis label
+plt.ylabel('Weight (kg)')
 
 # Set y-axis limits from the lowest to the highest weight
-plt.ylim(min(weights) -2, max(weights) + 2)  # Set y-axis limits
+plt.ylim(min(weights) - 2, max(weights) + 2)
 
 plt.title('Weight Over Time with Activities')
 
@@ -128,7 +149,4 @@ plt.xticks(x_ticks, rotation=45)
 # Show plot
 plt.tight_layout()
 plt.show()
-
-
-
 
