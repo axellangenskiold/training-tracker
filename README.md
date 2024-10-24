@@ -7,7 +7,9 @@ Tracks weight, date and activities.
 
 ## How to use
 ### Option 1 (APPLE USERS)
-Create a note in your Apple Notes app with the headline "THE ARC"
+Create a note in your Apple Notes app with the headline "THE ARC"  
+  
+This way you can use write the notes on your iPhone and when you run the script on your MacBook, the note automatically syncs.
 
 
 ### Option 2
