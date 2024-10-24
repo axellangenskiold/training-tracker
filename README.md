@@ -21,7 +21,7 @@ This way you can use write the notes on your iPhone and when you run the script 
 
 
 #### Option 2
-Write directly to the .txt file or similair file (google docs for example)
+Write directly to the .txt file or similair file (google docs for example) and copy to the .txt file in the repository every time you run it
 
 ### Step 3
 
