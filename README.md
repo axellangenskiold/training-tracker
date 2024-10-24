@@ -6,7 +6,14 @@ Tracks weight, date and activities.
 
 
 ## How to use
-Create a txt file with the following format:
+### Option 1 (APPLE USERS)
+Create a note in your Apple Notes app with the headline "THE ARC"
+
+
+### Option 2
+Write in the txt file using the following format:
+
+###
 - At the beginning of the file, put: Y2024
 - For every activity, put (D)D/(M)M: ACTIVITY, WEIGHT kg (if ACTIVITY is "löpning" or "run", put the distance you ran, eg. 9km (or miles))
 - Adding WEIGHT is optional!
