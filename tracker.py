@@ -4,6 +4,7 @@ import mplcursors
 from collections import Counter
 from datetime import datetime
 import subprocess
+import platform
 
 def read_data_from_file(filename):
     """Reads data from a file, skipping the first line."""
@@ -21,6 +22,11 @@ def read_data_from_file(filename):
 
 def get_note_content(note_title):
     """Retrieves the content of a note from the Notes app using AppleScript."""
+    
+    if platform.system() != 'Darwin':
+        print("This script can only be run on macOS.")
+        return []
+    
     applescript = f'''
     tell application "Notes"
         set theNote to the first note whose name is "{note_title}"
@@ -41,7 +47,7 @@ note_title = "THE ARC"  # Replace with your note's title
 note_content = get_note_content(note_title)
 
 # Check if note content is not empty before writing to file
-if note_content:
+if note_content != [] and note_content:
     write_note_to_file(note_content)
 else:
     print(f"Note titled '{note_title}' does not exist or is empty.")
