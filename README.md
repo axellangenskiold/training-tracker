@@ -48,7 +48,7 @@ Y2025
 
 #### From my notes
 
-![Description of Image](README_IMAGES/image.png)
+![Description of Image](README_IMAGES/image1.png)
 
 ## Specs
 
