@@ -1,5 +1,8 @@
-# training-tracker
-A python script to see your training progress
+# **Training Tracker**
+
+## **Overview**
+A python script to see your training progress daily.
+Tracks weight, date and activities.
 
 
 ## How to use
