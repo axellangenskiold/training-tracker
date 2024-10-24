@@ -2,8 +2,9 @@
 
 ## **Overview**
 
-A python script to see your training progress daily.
-Tracks weight, date and activities.
+#### A python script to see your training progress daily.  
+#### Tracks your weight over time, aswell as the activities you did.  
+#### The script shows a graph over you progress  
 
 ## How to use
 
