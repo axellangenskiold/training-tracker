@@ -46,10 +46,23 @@ Y2025
 1/1: gym, 92.5kg  
 2/1: run, 5km
 
-### From my notes
+#### From my notes
 
-![Description of Image](README_IMAGES/Skärmavbild 2024-10-24 kl. 21.17.39.png)
+![Description of Image](README_IMAGES/image.png)
 
 ## Specs
 
-**Have the .txt file in the same folder as your script**
+Run `python --version` to check your python version  
+If python is not installed, download it from [python.org](https://www.python.org/downloads/)
+
+Run `pip install matplotlib mplcursors` to install the necessary libraries  
+If you are using Python 3, you might need to run `pip3 install matplotlib mplcursors` instead
+
+**Run the script in a code editor of your choice or**
+
+**Use do the following commands in the terminal:**
+
+- `python tracker.py`
+  When standing in the repository folder  
+  if it doesn't work, try:
+- `python3 tracker.py`
