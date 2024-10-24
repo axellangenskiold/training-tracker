@@ -36,10 +36,15 @@ def write_note_to_file(note_content, filename="data.txt"):
     with open(filename, 'w') as file:
         file.write(note_content.replace("<div>", "").replace("</div>", ""))
 
-# Retrieve note content and write to file
-note_title = "LILLA ARCEN"  # Replace with your note's title
+# Retrieve note content
+note_title = "THE ARC"  # Replace with your note's title
 note_content = get_note_content(note_title)
-write_note_to_file(note_content)
+
+# Check if note content is not empty before writing to file
+if note_content:
+    write_note_to_file(note_content)
+else:
+    print(f"Note titled '{note_title}' does not exist or is empty.")
 
 # Read data from the updated file
 filename = "data.txt"
@@ -149,4 +154,3 @@ plt.xticks(x_ticks, rotation=45)
 # Show plot
 plt.tight_layout()
 plt.show()
-
