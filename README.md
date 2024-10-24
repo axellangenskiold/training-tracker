@@ -46,6 +46,10 @@ Y2025
 1/1: gym, 92.5kg  
 2/1: run, 5km
 
+### From my notes
+
+![Description of Image](README_IMAGES/Skärmavbild 2024-10-24 kl. 21.17.39.png)
+
 ## Specs
 
 **Have the .txt file in the same folder as your script**
