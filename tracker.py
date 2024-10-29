@@ -83,7 +83,7 @@ for item in data:
         
         if weightOrDistance is None:
             weightOrDistance = weights[-1]
-        elif activity in ['run', 'löpning']:
+        elif activity in ['run', 'löpning', 'gång', 'walk']:
             distances[len(activities)] = float(weightOrDistance[:-2])
             weightOrDistance = weights[-1]
         else:
