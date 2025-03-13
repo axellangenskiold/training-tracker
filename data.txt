@@ -18,3 +18,49 @@ Y2024
 23/10: hockey
 24/10: bröst, 76.8kg
 25/10: löpning, 6km
+28/10: gång, 5.6km
+30/10: löpning, 10km
+31/10: bröst, 79.1kg
+31/10: löpning, 4km
+1/11: rygg, 76.4kg
+1/11: löpning, 4km
+5/11: bröst, 78kg
+6/11: hockey
+7/11: rygg, 77.8kg
+13/11: hockey
+20/11: hockey
+23/11: hockey
+27/11: hockey
+2/12: bröst, 78.5kg
+3/12: rygg, 78.5kg
+4/12: hockey
+5/12: bröst, 78kg
+6/12: rygg, 77.5kg
+9/12: bröst, 79kg
+11/12: rygg, 78.2kg
+12/12: bröst, 78.7kg
+13/12: rygg, 78kg
+15/12: bröst, 79.5kg
+17/12: löpning, 5.5km
+24/12: löpning, 6km
+25/12: löpning, 6km
+26/12: löpning, 5km
+Y2025
+4/2: bröst, 78kg
+10/2: rygg, 76.7kg
+11/2: bröst, 76kg
+12/2: hockey
+13/2: rygg, 75.6kg
+16/2: bröst, 75.5kg
+17/2: axlar+mage, 75.4kg
+19/2: bröst, 76.5kg
+20/2: rygg, 75.6kg
+25/2: bröst, 77.2kg
+27/2: rygg, 76.5kg
+28/2: hockey
+5/3: hockey
+6/3: bröst, 76kg
+8/3: hockeymatch
+10/3: löpning, 7km
+11/3: bröst, 77.7kg
+12/3: rygg, 77.4kg

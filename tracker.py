@@ -63,6 +63,10 @@ distances = {}
 activities = []
 year = None
 
+maxWeight = 0
+minWeight = 1000000
+currentWeight = 0
+
 for item in data:
     if item[0] == "Y":
         year = item[1:]
@@ -88,6 +92,9 @@ for item in data:
             weightOrDistance = weights[-1]
         else:
             weightOrDistance = float(weightOrDistance[:-2])
+            maxWeight = max(maxWeight, weightOrDistance)
+            minWeight = min(minWeight, weightOrDistance)
+            currentWeight = weightOrDistance
         
         full_date = f"{day}/{month}/{year}"
         dates.append(full_date)
@@ -133,7 +140,7 @@ total_kilometers = sum(distances.values())
 # Add legend for activities with additional summary information
 activity_counts = Counter(activities)
 legend_labels = [f"{activity} ({count})" for activity, count in activity_counts.items()]
-summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}"
+summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
 
 plt.legend(
     handles=[
@@ -149,7 +156,7 @@ plt.xlabel('Date')
 plt.ylabel('Weight (kg)')
 
 # Set y-axis limits from the lowest to the highest weight
-plt.ylim(min(weights) - 2, max(weights) + 2)
+plt.ylim(min(weights) - 1, max(weights) + 2)
 
 plt.title('Weight Over Time with Activities')
 
@@ -159,4 +166,5 @@ plt.xticks(x_ticks, rotation=45)
 
 # Show plot
 plt.tight_layout()
+plt.get_current_fig_manager().resize(1800, 1600)
 plt.show()
