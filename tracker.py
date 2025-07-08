@@ -66,6 +66,7 @@ year = None
 maxWeight = 0
 minWeight = 1000000
 currentWeight = 0
+nbrOfHoles = 0
 
 for item in data:
     if item[0] == "Y":
@@ -86,6 +87,9 @@ for item in data:
         activity = activity.strip()
         
         if weightOrDistance is None:
+            weightOrDistance = weights[-1]
+        elif activity == 'golf':
+            nbrOfHoles += int(weightOrDistance)
             weightOrDistance = weights[-1]
         elif activity in ['run', 'löpning', 'gång', 'walk']:
             distances[len(activities)] = float(weightOrDistance[:-2])

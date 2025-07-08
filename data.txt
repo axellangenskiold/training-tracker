@@ -52,7 +52,7 @@ Y2025
 12/2: hockey
 13/2: rygg, 75.6kg
 16/2: bröst, 75.5kg
-17/2: axlar+mage, 75.4kg
+17/2: överkropp, 75.4kg
 19/2: bröst, 76.5kg
 20/2: rygg, 75.6kg
 25/2: bröst, 77.2kg
@@ -63,4 +63,47 @@ Y2025
 8/3: hockeymatch
 10/3: löpning, 7km
 11/3: bröst, 77.7kg
-12/3: rygg, 77.4kg
+12/3: hockey
+13/3: rygg, 77.4kg
+14/3: hockey
+16/3: bröst, 77.1kg
+17/3: löpning, 4km
+19/3: löpning, 4.7km
+24/3: rygg, 77.3kg
+25/3: bröst, 78.2kg
+26/3: hockey
+27/3: löpning, 7.3km
+28/3: hockey
+29/3: hockeymatch
+31/3: överkropp
+1/4: löpning, 6.5km
+2/4: golf, 36
+3/4: löpning, 5km
+4/4: löpning, 6.5km
+5/4: golf, 18
+8/4: överkropp
+9/4: bröst, 74kg
+22/4: löpning, 7km
+26/4: golf, 36
+28/4: golf, 18
+3/5: golf, 18
+4/5: golf, 27
+11/5: golf, 18
+15/5: överkropp, 79kg
+20/5: golf, 18
+20/5: överkropp
+21/5: överkropp, 78kg
+24/5: golf, 18
+26/5: överkropp
+29/5: löpning, 6km
+30/5: överkropp, 77kg
+31/5: löpning, 10.3km
+1/6: överkropp
+2/6: löpning, 10km
+3/6: överkropp, 77.5kg
+4/6: överkropp
+6/6: överkropp 
+7/6: överkropp
+9/6: löpning, 10km
+10/6: överkropp
+16/6: löpning, 11.1kg
