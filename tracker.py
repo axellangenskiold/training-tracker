@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import mplcursors
 from collections import Counter
 from datetime import datetime, timedelta
 import subprocess
@@ -147,22 +146,44 @@ activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities
 ax.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
 
 # Plot each point with the corresponding activity color
-scatter = ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
+ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
 
-# Add interactive cursor with hover functionality on the scatter plot
-cursor = mplcursors.cursor(scatter, hover=True)
-cursor.connect(
-    "add", lambda sel: sel.annotation.set(
-        text=(
-            f"Date: {dates[sel.index].strftime('%Y-%m-%d')}\n"
-            f"Activity: {activities[sel.index]}\n"
-            f"Weight: {weights[sel.index]} kg\n"
-            + (f"Distance: {distances[sel.index]} km" if activities[sel.index] in ['löpning', 'run'] else "")
-        ),
-        position=(0, -50),  # Adjust the position offset here
-        anncoords="offset points"
-    )
+# Prepare annotation that follows the mouse based on closest weight
+annotation = ax.annotate(
+    "",
+    xy=(0, 0),
+    xytext=(15, -30),
+    textcoords="offset points",
+    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=0.5),
+    arrowprops=dict(arrowstyle="->"),
 )
+annotation.set_visible(False)
+
+def format_annotation_text(index):
+    base_text = [
+        f"Date: {dates[index].strftime('%Y-%m-%d')}",
+        f"Activity: {activities[index]}",
+        f"Weight: {weights[index]} kg",
+    ]
+    if activities[index] in ['löpning', 'run'] and index in distances:
+        base_text.append(f"Distance: {distances[index]} km")
+    return "\n".join(base_text)
+
+def on_mouse_move(event):
+    if event.inaxes != ax or event.ydata is None:
+        if annotation.get_visible():
+            annotation.set_visible(False)
+            fig.canvas.draw_idle()
+        return
+    target_y = event.ydata
+    closest_index = min(range(len(weights)), key=lambda i: abs(weights[i] - target_y))
+    annotation.xy = (dates[closest_index], weights[closest_index])
+    annotation.set_text(format_annotation_text(closest_index))
+    if not annotation.get_visible():
+        annotation.set_visible(True)
+    fig.canvas.draw_idle()
+
+fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
 
 # Calculate the number of activities, number of days, and total kilometers
 num_activities = len(activities)
