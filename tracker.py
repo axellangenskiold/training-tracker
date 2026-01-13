@@ -182,8 +182,8 @@ legend_ax.legend(
 ax.set_xlabel('Date')
 ax.set_ylabel('Weight (kg)')
 
-# Set y-axis limits from the lowest to the highest weight
-ax.set_ylim(min(weights) - 1, max(weights) + 10)
+# Set y-axis limits slightly beyond observed weights
+ax.set_ylim(min(weights) - 1, max(weights) + 1)
 
 ax.set_title('Weight Over Time with Activities')
 
