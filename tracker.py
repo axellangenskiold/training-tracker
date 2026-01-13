@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 import mplcursors
 from collections import Counter
-from datetime import datetime
+from datetime import datetime, timedelta
 import subprocess
 import platform
 from matplotlib.widgets import RangeSlider
@@ -109,6 +109,13 @@ for item in data:
 
 # Convert date strings to datetime objects
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
+min_date = min(dates)
+max_date = max(dates)
+span_days = max((max_date - min_date).days, 1)
+pad_days = max(3, int(span_days * 0.02))
+pad_delta = timedelta(days=pad_days)
+x_axis_min = min_date - pad_delta
+x_axis_max = max_date + pad_delta
 
 # Plot data
 fig = plt.figure(figsize=(10, 6))
@@ -131,6 +138,7 @@ legend_ax.set_xlim(0, 1)
 legend_ax.set_ylim(0, 1)
 for spine in legend_ax.spines.values():
     spine.set_visible(True)
+ax.set_xlim(x_axis_min, x_axis_max)
 
 # Create a color map for activities
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
@@ -158,8 +166,8 @@ cursor.connect(
 
 # Calculate the number of activities, number of days, and total kilometers
 num_activities = len(activities)
-start_date = min(dates)
-num_days = (max(dates) - start_date).days
+start_date = min_date
+num_days = (max_date - start_date).days
 total_kilometers = sum(distances.values())
 
 # Add legend for activities with additional summary information
@@ -193,8 +201,8 @@ def first_day_of_next_month(date_obj):
         return datetime(date_obj.year + 1, 1, 1)
     return datetime(date_obj.year, date_obj.month + 1, 1)
 
-month_tick = first_day_of_next_month(min(dates))
-last_date = max(dates)
+month_tick = first_day_of_next_month(min_date)
+last_date = max_date
 month_ticks = []
 while month_tick <= last_date:
     month_ticks.append(month_tick)
@@ -212,15 +220,16 @@ if month_ticks:
     ax.set_xticklabels(tick_labels, rotation=45, ha='right')
 
 # Add a horizontal range slider to zoom the x-axis
-date_numbers = mdates.date2num(dates)
 ax_pos = ax.get_position()
 slider_ax = fig.add_axes([ax_pos.x0, 0.08, ax_pos.width, 0.03])
+padded_start_num = mdates.date2num(x_axis_min)
+padded_end_num = mdates.date2num(x_axis_max)
 date_slider = RangeSlider(
     ax=slider_ax,
     label='Date Range',
-    valmin=date_numbers.min(),
-    valmax=date_numbers.max(),
-    valinit=(date_numbers.min(), date_numbers.max()),
+    valmin=padded_start_num,
+    valmax=padded_end_num,
+    valinit=(padded_start_num, padded_end_num),
 )
 
 def update_range(_):
