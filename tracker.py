@@ -72,6 +72,7 @@ for item in data:
     if item[0] == "Y":
         year = item[1:]
     else:
+        print(item)
         date, rest = item.split(":")
         day, month, year = date.split("/") + [year]
         
@@ -91,7 +92,7 @@ for item in data:
         elif activity == 'golf':
             nbrOfHoles += int(weightOrDistance)
             weightOrDistance = weights[-1]
-        elif activity in ['run', 'löpning', 'gång', 'walk']:
+        elif activity in ['run', 'löpning', 'gång', 'walk', 'cykel', 'bike', 'promenad', 'walk', 'vandring', 'hiking']:
             distances[len(activities)] = float(weightOrDistance[:-2])
             weightOrDistance = weights[-1]
         else:
@@ -160,13 +161,33 @@ plt.xlabel('Date')
 plt.ylabel('Weight (kg)')
 
 # Set y-axis limits from the lowest to the highest weight
-plt.ylim(min(weights) - 1, max(weights) + 2)
+plt.ylim(min(weights) - 1, max(weights) + 10)
 
 plt.title('Weight Over Time with Activities')
 
-# Set x-ticks to show every 10th date, including the first and last
-x_ticks = [dates[0]] + dates[3::4] + [dates[-1]]
-plt.xticks(x_ticks, rotation=45)
+# Configure x-axis ticks to show the first day of each month starting after the first activity
+def first_day_of_next_month(date_obj):
+    """Returns the first day of the month following the provided date."""
+    if date_obj.month == 12:
+        return datetime(date_obj.year + 1, 1, 1)
+    return datetime(date_obj.year, date_obj.month + 1, 1)
+
+month_tick = first_day_of_next_month(min(dates))
+last_date = max(dates)
+month_ticks = []
+while month_tick <= last_date:
+    month_ticks.append(month_tick)
+    if month_tick.month == 12:
+        month_tick = datetime(month_tick.year + 1, 1, 1)
+    else:
+        month_tick = datetime(month_tick.year, month_tick.month + 1, 1)
+
+if not month_ticks:
+    month_ticks = [month_tick]
+
+if month_ticks:
+    tick_labels = [tick.strftime('%b %Y') for tick in month_ticks]
+    plt.xticks(month_ticks, tick_labels, rotation=45)
 
 # Show plot
 plt.tight_layout()

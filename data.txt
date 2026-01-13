@@ -18,7 +18,6 @@ Y2024
 23/10: hockey
 24/10: bröst, 76.8kg
 25/10: löpning, 6km
-28/10: gång, 5.6km
 30/10: löpning, 10km
 31/10: bröst, 79.1kg
 31/10: löpning, 4km
@@ -60,7 +59,7 @@ Y2025
 28/2: hockey
 5/3: hockey
 6/3: bröst, 76kg
-8/3: hockeymatch
+8/3: hockey
 10/3: löpning, 7km
 11/3: bröst, 77.7kg
 12/3: hockey
@@ -74,7 +73,7 @@ Y2025
 26/3: hockey
 27/3: löpning, 7.3km
 28/3: hockey
-29/3: hockeymatch
+29/3: hockey
 31/3: överkropp
 1/4: löpning, 6.5km
 2/4: golf, 36
@@ -102,8 +101,110 @@ Y2025
 2/6: löpning, 10km
 3/6: överkropp, 77.5kg
 4/6: överkropp
-6/6: överkropp 
+6/6: överkropp
 7/6: överkropp
 9/6: löpning, 10km
 10/6: överkropp
 16/6: löpning, 11.1kg
+17/6: överkropp
+20/6: löpning, 6km
+24/6: löpning, 5.4km
+25/6: löpning, 6.5km
+26/6: överkropp
+29/6: löpning, 5.3km
+30/6: löpning, 11km
+1/7: överkropp
+2/7: överkropp
+16/7: golf, 18
+18/7: löpning, 7km
+21/7: löpning, 13.5km
+22/7: löpning, 5.6km
+23/7: löpning, 9.6km
+24/7: löpning, 5.2km
+2/8: löpning, 6.2km
+6/8: löpning, 7.8km
+9/8: golf, 18
+10/8: golf, 18
+12/8: löpning, 5.4km
+18/8: löpning, 7.6km
+19/8: löpning, 5km
+20/8: golf, 18
+22/8: löpning, 10.2km
+23/8: golf, 9
+24/8: löpning, 6.1km
+27/8: löpning, 9km
+28/8: löpning, 14.2km
+10/9: överkropp
+11/9: överkropp
+16/9: överkropp
+17/9: överkropp
+23/9: överkropp
+24/9: överkropp
+26/9: överkropp
+1/10: vandring, 22km
+6/10: överkropp
+7/10: överkropp
+8/10: löpning, 4km
+9/10: överkropp
+10/10: överkropp
+11/10: löpning, 8.1km
+12/10: överkropp
+13/10: överkropp
+14/10: löpning, 8.3km
+15/10: överkropp
+16/10: överkropp
+17/10: löpning, 5.4km
+18/10: golf, 18
+19/10: överkropp
+20/10: löpning, 6.1km
+21/10: överkropp
+22/10: överkropp
+23/10: överkropp
+24/10: löpning, 6.3km
+25/10: överkropp
+26/10: löpning, 5.4km
+27/10: överkropp, 79.6kg
+28/10: löpning, 8.4km
+29/10: överkropp, 78.4kg
+30/10: överkropp
+31/10: tennis, 76.9kg
+1/11: löpning, 16km
+2/11: överkropp
+3/11: överkropp, 79.6kg
+4/11: överkropp, 79.9kg
+5/11: överkropp, 78.0kg
+6/11: överkropp, 76.3kg
+7/11: överkropp, 77.0kg
+8/11: överkropp, 77.5kg
+9/11: överkropp, 77.6kg
+10/11: överkropp 
+11/11: överkropp
+12/11: löpning, 6.7km
+13/11: överkropp
+14/11: överkropp, 75.7kg
+15/11: överkropp, 75.9kg
+16/11: paddel, 77.6kg
+17/11: överkropp, 75.2kg
+19/11: HIIT
+21/11: tennis
+30/11: överkropp
+19/12: överkropp, 79.1kg
+20/12: överkropp
+22/12: överkropp, 79.3kg
+23/12: hockey
+24/12: överkropp
+25/12: överkropp
+27/12: överkropp, 79.2kg
+28/12: löpning, 5.1km
+29/12: överkropp
+30/12: tennis
+31/12: överkropp, 77.2kg
+Y2026
+2/1: överkropp, 80.1kg
+3/1: löpning, 9km
+4/1: överkropp, 77.4kg
+6/1: överkropp, 78kg
+7/1: löpning, 5.5km
+8/1: överkropp, 78.1kg
+9/1: skidor
+11/1: överkropp, 77.8kg
