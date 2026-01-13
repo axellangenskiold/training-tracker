@@ -181,6 +181,14 @@ def on_mouse_move(event):
         range(len(date_numbers)),
         key=lambda i: abs(date_numbers[i] - target_x)
     )
+    current_xlim = ax.get_xlim()
+    margin = (current_xlim[1] - current_xlim[0]) * 0.15
+    if date_numbers[closest_index] > current_xlim[1] - margin:
+        annotation.xytext = (-15, -30)
+        annotation.set_ha('right')
+    else:
+        annotation.xytext = (15, -30)
+        annotation.set_ha('left')
     annotation.xy = (dates[closest_index], weights[closest_index])
     annotation.set_text(format_annotation_text(closest_index))
     if not annotation.get_visible():
