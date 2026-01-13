@@ -218,5 +218,5 @@ date_slider.on_changed(update_range)
 update_range(None)
 
 # Show plot
-plt.get_current_fig_manager().resize(1800, 1600)
+plt.get_current_fig_manager().resize(2700, 1600)
 plt.show()
