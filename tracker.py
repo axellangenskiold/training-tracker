@@ -112,7 +112,7 @@ dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
 
 # Plot data
 fig, ax = plt.subplots(figsize=(10, 6))
-fig.subplots_adjust(bottom=0.25)
+fig.subplots_adjust(bottom=0.25, right=0.75)
 
 # Create a color map for activities
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
@@ -155,7 +155,9 @@ ax.legend(
                    markerfacecolor=activity_colors[activity], markersize=10)
         for activity, label in zip(activity_counts.keys(), legend_labels)
     ] + [plt.Line2D([0], [0], color='w', label=summary_label)],
-    loc='upper right'
+    loc='upper left',
+    bbox_to_anchor=(1.02, 1),
+    borderaxespad=0
 )
 
 # Set labels and title
