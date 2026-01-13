@@ -108,6 +108,7 @@ for item in data:
 
 # Convert date strings to datetime objects
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
+date_numbers = mdates.date2num(dates)
 min_date = min(dates)
 max_date = max(dates)
 span_days = max((max_date - min_date).days, 1)
@@ -170,13 +171,16 @@ def format_annotation_text(index):
     return "\n".join(base_text)
 
 def on_mouse_move(event):
-    if event.inaxes != ax or event.ydata is None:
+    if event.inaxes != ax or event.xdata is None:
         if annotation.get_visible():
             annotation.set_visible(False)
             fig.canvas.draw_idle()
         return
-    target_y = event.ydata
-    closest_index = min(range(len(weights)), key=lambda i: abs(weights[i] - target_y))
+    target_x = event.xdata
+    closest_index = min(
+        range(len(date_numbers)),
+        key=lambda i: abs(date_numbers[i] - target_x)
+    )
     annotation.xy = (dates[closest_index], weights[closest_index])
     annotation.set_text(format_annotation_text(closest_index))
     if not annotation.get_visible():
