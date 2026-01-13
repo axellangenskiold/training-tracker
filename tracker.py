@@ -111,9 +111,26 @@ for item in data:
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
 
 # Plot data
-fig, ax = plt.subplots(figsize=(10, 6))
-fig.set_size_inches(14, 8, forward=True)
-fig.subplots_adjust(left=0.08, right=0.62, bottom=0.25, top=0.95)
+fig = plt.figure(figsize=(10, 6))
+gs = fig.add_gridspec(
+    1,
+    2,
+    width_ratios=[4, 1],
+    left=0.08,
+    right=0.97,
+    bottom=0.25,
+    top=0.95,
+    wspace=0.05,
+)
+ax = fig.add_subplot(gs[0, 0])
+legend_ax = fig.add_subplot(gs[0, 1])
+legend_ax.set_facecolor('white')
+legend_ax.set_xticks([])
+legend_ax.set_yticks([])
+legend_ax.set_xlim(0, 1)
+legend_ax.set_ylim(0, 1)
+for spine in legend_ax.spines.values():
+    spine.set_visible(True)
 
 # Create a color map for activities
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
@@ -150,15 +167,15 @@ activity_counts = Counter(activities)
 legend_labels = [f"{activity} ({count})" for activity, count in activity_counts.items()]
 summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
 
-ax.legend(
+legend_ax.legend(
     handles=[
         plt.Line2D([0], [0], marker='o', color='w', label=label,
                    markerfacecolor=activity_colors[activity], markersize=10)
         for activity, label in zip(activity_counts.keys(), legend_labels)
     ] + [plt.Line2D([0], [0], color='w', label=summary_label)],
     loc='upper left',
-    bbox_to_anchor=(1.05, 1),
-    borderaxespad=0
+    frameon=False,
+    handletextpad=0.5
 )
 
 # Set labels and title
