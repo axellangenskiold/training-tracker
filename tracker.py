@@ -5,6 +5,7 @@ from collections import Counter
 from datetime import datetime
 import subprocess
 import platform
+from matplotlib.widgets import RangeSlider
 
 def read_data_from_file(filename):
     """Reads data from a file, skipping the first line."""
@@ -110,16 +111,17 @@ for item in data:
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
 
 # Plot data
-plt.figure(figsize=(10, 6))
+fig, ax = plt.subplots(figsize=(10, 6))
+fig.subplots_adjust(bottom=0.25)
 
 # Create a color map for activities
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
 
 # Add a line plot to connect the points
-plt.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
+ax.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
 
 # Plot each point with the corresponding activity color
-scatter = plt.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
+scatter = ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
 
 # Add interactive cursor with hover functionality on the scatter plot
 cursor = mplcursors.cursor(scatter, hover=True)
@@ -147,7 +149,7 @@ activity_counts = Counter(activities)
 legend_labels = [f"{activity} ({count})" for activity, count in activity_counts.items()]
 summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
 
-plt.legend(
+ax.legend(
     handles=[
         plt.Line2D([0], [0], marker='o', color='w', label=label,
                    markerfacecolor=activity_colors[activity], markersize=10)
@@ -157,17 +159,16 @@ plt.legend(
 )
 
 # Set labels and title
-plt.xlabel('Date')
-plt.ylabel('Weight (kg)')
+ax.set_xlabel('Date')
+ax.set_ylabel('Weight (kg)')
 
 # Set y-axis limits from the lowest to the highest weight
-plt.ylim(min(weights) - 1, max(weights) + 10)
+ax.set_ylim(min(weights) - 1, max(weights) + 10)
 
-plt.title('Weight Over Time with Activities')
+ax.set_title('Weight Over Time with Activities')
 
 # Configure x-axis ticks to show the first day of each month starting after the first activity
 def first_day_of_next_month(date_obj):
-    """Returns the first day of the month following the provided date."""
     if date_obj.month == 12:
         return datetime(date_obj.year + 1, 1, 1)
     return datetime(date_obj.year, date_obj.month + 1, 1)
@@ -187,9 +188,31 @@ if not month_ticks:
 
 if month_ticks:
     tick_labels = [tick.strftime('%b %Y') for tick in month_ticks]
-    plt.xticks(month_ticks, tick_labels, rotation=45)
+    ax.set_xticks(month_ticks)
+    ax.set_xticklabels(tick_labels, rotation=45, ha='right')
+
+# Add a horizontal range slider to zoom the x-axis
+date_numbers = mdates.date2num(dates)
+slider_ax = fig.add_axes([0.15, 0.08, 0.7, 0.03])
+date_slider = RangeSlider(
+    ax=slider_ax,
+    label='Date Range',
+    valmin=date_numbers.min(),
+    valmax=date_numbers.max(),
+    valinit=(date_numbers.min(), date_numbers.max()),
+)
+
+def update_range(_):
+    start_num, end_num = date_slider.val
+    ax.set_xlim(mdates.num2date(start_num), mdates.num2date(end_num))
+    date_slider.valtext.set_text(
+        f"{mdates.num2date(start_num).strftime('%b %Y')} - {mdates.num2date(end_num).strftime('%b %Y')}"
+    )
+    fig.canvas.draw_idle()
+
+date_slider.on_changed(update_range)
+update_range(None)
 
 # Show plot
-plt.tight_layout()
 plt.get_current_fig_manager().resize(1800, 1600)
 plt.show()
