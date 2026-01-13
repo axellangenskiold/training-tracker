@@ -112,7 +112,8 @@ dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
 
 # Plot data
 fig, ax = plt.subplots(figsize=(10, 6))
-fig.subplots_adjust(bottom=0.25, right=0.75)
+fig.set_size_inches(14, 8, forward=True)
+fig.subplots_adjust(left=0.08, right=0.62, bottom=0.25, top=0.95)
 
 # Create a color map for activities
 activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
@@ -156,7 +157,7 @@ ax.legend(
         for activity, label in zip(activity_counts.keys(), legend_labels)
     ] + [plt.Line2D([0], [0], color='w', label=summary_label)],
     loc='upper left',
-    bbox_to_anchor=(1.02, 1),
+    bbox_to_anchor=(1.05, 1),
     borderaxespad=0
 )
 
@@ -195,7 +196,8 @@ if month_ticks:
 
 # Add a horizontal range slider to zoom the x-axis
 date_numbers = mdates.date2num(dates)
-slider_ax = fig.add_axes([0.15, 0.08, 0.7, 0.03])
+ax_pos = ax.get_position()
+slider_ax = fig.add_axes([ax_pos.x0, 0.08, ax_pos.width, 0.03])
 date_slider = RangeSlider(
     ax=slider_ax,
     label='Date Range',
