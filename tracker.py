@@ -68,6 +68,20 @@ minWeight = 1000000
 currentWeight = 0
 nbrOfHoles = 0
 
+activities_dict = [
+    'run', 
+    'löpning', 
+    'gång', 
+    'walk', 
+    'cykel', 
+    'bike', 
+    'promenad', 
+    'vandring', 
+    'hiking', 
+    'hike',
+    'mountainbike'
+    ]
+
 for item in data:
     if item[0] == "Y":
         year = item[1:]
@@ -92,7 +106,7 @@ for item in data:
         elif activity == 'golf':
             nbrOfHoles += int(weightOrDistance)
             weightOrDistance = weights[-1]
-        elif activity in ['run', 'löpning', 'gång', 'walk', 'cykel', 'bike', 'promenad', 'walk', 'vandring', 'hiking']:
+        elif activity in activities_dict:
             distances[len(activities)] = float(weightOrDistance[:-2])
             weightOrDistance = weights[-1]
         else:

@@ -208,3 +208,99 @@ Y2026
 8/1: överkropp, 78.1kg
 9/1: skidor
 11/1: överkropp, 77.8kg
+12/1: överkropp, 76.4kg
+13/1: överkropp, 77.2kg
+14/1: löpning, 6.5km
+16/1: löpning, 10km
+17/1: överkropp, 76.9kg
+19/1: överkropp
+20/1: löpning, 12.1km
+21/1: överkropp, 78kg
+22/1: löpning, 7km
+23/1: överkropp, 77.9kg
+24/1: löpning, 6km
+28/1: skidor
+29/1: skidor
+30/1: skidor
+31/1: skidor
+1/2: skidor
+2/2: skidor
+3/2: löpning, 5km
+4/2: skidor
+5/2: skidor
+6/2: skidor
+7/2: skidor
+9/2: skidor
+10/2: skidor
+11/2: skidor
+12/2: skidor
+13/2: skidor
+14/2: skidor
+15/2: skidor
+16/2: skidor
+17/2: skidor
+19/2: skidor
+21/2: topptur
+22/2: skidor
+23/2: skidor
+24/2: skidor
+25/2: skidor
+26/2: skidor
+27/2: skidor
+1/3: skidor
+2/3: skidor
+3/3: skidor
+4/3: skidor
+5/3: skidor
+6/3: skidor
+7/3: skidor
+11/3: skidor
+12/3: skidor
+13/3: topptur
+14/3: skidor
+15/3: skidor
+16/3: skidor
+18/3: skidor
+19/3: skidor
+20/3: skidor
+21/3: skidor
+22/3: skidor
+23/3: skidor
+24/3: skidor
+26/3: skidor
+27/3: skidor
+28/3: skidor
+29/3: skidor
+30/3: skidor
+5/4: golf, 18
+6/4: mountainbike, 50km
+7/4: bike, 45km
+9/4: löpning, 4km
+10/4: hike, 20km
+12/4: överkropp, 78.5kg
+13/4: löpning, 20km
+15/4: golf, 18
+17/4: golf, 18
+19/4: överkropp
+20/4: överkropp
+21/4: löpning, 10km
+24/4: överkropp
+26/4: överkropp, 76.5kg
+27/4: överkropp
+29/4: löpning, 5.2km
+2/5: golf, 18
+3/5: golf, 18
+4/5: överkropp
+5/5: löpning, 5.4km
+6/5: överkropp
+7/5: överkropp
+12/5: överkropp
+14/5: överkropp
+15/5: överkropp
+19/5: löpning, 4km
+20/5: överkropp
+28/5: överkropp
+29/5: överkropp
+30/5: överkropp
+31/5: överkropp
+3/6: överkropp, 75.1kg
