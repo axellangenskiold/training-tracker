@@ -79,7 +79,8 @@ activities_dict = [
     'vandring', 
     'hiking', 
     'hike',
-    'mountainbike'
+    'mountainbike',
+    'via ferrata'
     ]
 
 for item in data:
