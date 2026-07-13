@@ -4,7 +4,16 @@ from collections import Counter
 from datetime import datetime, timedelta
 import subprocess
 import platform
+import re
 from matplotlib.widgets import RangeSlider
+
+
+def extract_number(text):
+    """Pull the first number out of e.g. '78kg', '6 km', '14.2km'."""
+    match = re.search(r'-?\d+(?:\.\d+)?', text)
+    if match is None:
+        raise ValueError(f"no number in {text.strip()!r}")
+    return float(match.group())
 
 def read_data_from_file(filename):
     """Reads data from a file, skipping the first line."""
@@ -83,43 +92,47 @@ activities_dict = [
     'via ferrata'
     ]
 
-for item in data:
+last_weight = None
+for line_no, item in enumerate(data, start=2):  # data[] starts at file line 2
+    if not item:
+        continue
     if item[0] == "Y":
         year = item[1:]
-    else:
-        print(item)
-        date, rest = item.split(":")
-        day, month, year = date.split("/") + [year]
-        
-        # Split rest and check if it has two parts
+        continue
+    try:
+        date, rest = item.split(":", 1)
+        day, month = date.strip().split("/")
+
         rest_parts = rest.split(",")
-        
-        if len(rest_parts) == 2:
-            activity, weightOrDistance = rest_parts
-        else:
-            activity, weightOrDistance = rest, None
-        
-        # Strip whitespace from activity
-        activity = activity.strip()
-        
-        if weightOrDistance is None:
-            weightOrDistance = weights[-1]
+        activity = rest_parts[0].strip()
+        value = rest_parts[1].strip() if len(rest_parts) > 1 else None
+
+        if value is None:
+            weight = last_weight
         elif activity == 'golf':
-            nbrOfHoles += int(weightOrDistance)
-            weightOrDistance = weights[-1]
+            nbrOfHoles += int(extract_number(value))
+            weight = last_weight
         elif activity in activities_dict:
-            distances[len(activities)] = float(weightOrDistance[:-2])
-            weightOrDistance = weights[-1]
+            distances[len(activities)] = extract_number(value)
+            weight = last_weight
         else:
-            weightOrDistance = float(weightOrDistance[:-2])
-            maxWeight = max(maxWeight, weightOrDistance)
-            minWeight = min(minWeight, weightOrDistance)
-            currentWeight = weightOrDistance
-        
-        full_date = f"{day}/{month}/{year}"
-        dates.append(full_date)
-        weights.append(weightOrDistance)
+            weight = extract_number(value)
+            last_weight = weight
+            maxWeight = max(maxWeight, weight)
+            minWeight = min(minWeight, weight)
+            currentWeight = weight
+
+        dates.append(f"{day.strip()}/{month.strip()}/{year}")
+        weights.append(weight)  # may be None until the first weigh-in
         activities.append(activity)
+    except (ValueError, IndexError) as error:
+        print(f"Skipping malformed line {line_no}: {item!r} ({error})")
+
+# Backfill any activity days logged before the first weigh-in
+first_known = next((w for w in weights if w is not None), None)
+if first_known is None:
+    raise SystemExit("No weight entries found — nothing to plot.")
+weights = [first_known if w is None else w for w in weights]
 
 # Convert date strings to datetime objects
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
