@@ -162,45 +162,77 @@ pad_delta = timedelta(days=pad_days)
 x_axis_min = min_date - pad_delta
 x_axis_max = max_date + pad_delta
 
+# Modern, clean theme
+INK = '#16181d'       # near-black for text / trend line
+MUTED = '#8a909c'     # ticks and secondary text
+plt.rcParams.update({
+    'figure.facecolor': '#f4f5f7',
+    'axes.facecolor': '#ffffff',
+    'axes.edgecolor': '#d9dce1',
+    'axes.linewidth': 1.0,
+    'axes.axisbelow': True,
+    'axes.labelcolor': MUTED,
+    'text.color': '#3a3f4a',
+    'xtick.color': MUTED,
+    'ytick.color': MUTED,
+    'xtick.labelsize': 9,
+    'ytick.labelsize': 9,
+    'font.size': 10,
+})
+
 # Plot data
-fig = plt.figure(figsize=(10, 6))
+fig = plt.figure(figsize=(12, 6.5))
 gs = fig.add_gridspec(
     1,
     2,
-    width_ratios=[4, 1],
-    left=0.08,
-    right=0.97,
-    bottom=0.25,
-    top=0.95,
-    wspace=0.05,
+    width_ratios=[4, 1.35],
+    left=0.06,
+    right=0.985,
+    bottom=0.24,
+    top=0.90,
+    wspace=0.04,
 )
 ax = fig.add_subplot(gs[0, 0])
+ax.spines[['top', 'right']].set_visible(False)
+ax.grid(axis='y', color='#e9ebef', linewidth=1.0)
+ax.tick_params(length=0)
 legend_ax = fig.add_subplot(gs[0, 1])
-legend_ax.set_facecolor('white')
+legend_ax.set_facecolor('#ffffff')
 legend_ax.set_xticks([])
 legend_ax.set_yticks([])
 legend_ax.set_xlim(0, 1)
 legend_ax.set_ylim(0, 1)
 for spine in legend_ax.spines.values():
-    spine.set_visible(True)
+    spine.set_visible(False)
 ax.set_xlim(x_axis_min, x_axis_max)
 
-# Create a color map for activities
-activity_colors = {activity: f"C{i}" for i, activity in enumerate(set(activities))}
+# Distinct color per activity (tab20 gives 20 unambiguous hues), stable across runs
+palette = plt.cm.tab20.colors
+activity_colors = {a: palette[i % len(palette)] for i, a in enumerate(sorted(set(activities)))}
 
-# Add a line plot to connect the points
-ax.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
+# Faint line connecting the raw points, so the coloured dots stay the focus
+ax.plot(dates, weights, linestyle='-', color='#c9cdd4', linewidth=1.0, zorder=1)
 
 # Plot each point with the corresponding activity color
-ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
+ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities],
+           s=30, edgecolor='white', linewidth=0.6, zorder=3)
 
 # Overlay a 7-day rolling average of weigh-ins to show the bodyweight trend
 weighin_dates = [d for d, w in zip(dates, is_weighin) if w]
 weighin_weights = [wt for wt, w in zip(weights, is_weighin) if w]
 if len(weighin_dates) >= 2:
     trend = rolling_average(weighin_dates, weighin_weights, window_days=7)
-    ax.plot(weighin_dates, trend, color='black', linewidth=2, zorder=4,
-            label='7-day weight trend')
+    # Break the line across long gaps (>21 days) instead of drawing a fake diagonal
+    seg_x, seg_y, prev = [], [], None
+    for d, t in zip(weighin_dates, trend):
+        if prev is not None and (d - prev).days > 21:
+            seg_x.append(prev)
+            seg_y.append(float('nan'))
+        seg_x.append(d)
+        seg_y.append(t)
+        prev = d
+    ax.plot(seg_x, seg_y, color=INK, linewidth=2.2, zorder=4,
+            solid_capstyle='round', label='7-day weight trend')
 
 # Prepare annotation that follows the mouse based on closest weight
 annotation = ax.annotate(
@@ -208,8 +240,11 @@ annotation = ax.annotate(
     xy=(0, 0),
     xytext=(15, -30),
     textcoords="offset points",
-    bbox=dict(boxstyle="round,pad=0.3", fc="white", ec="black", lw=0.5),
-    arrowprops=dict(arrowstyle="->"),
+    bbox=dict(boxstyle="round,pad=0.5", fc=INK, ec="none"),
+    arrowprops=dict(arrowstyle="->", color=INK),
+    color="white",
+    fontsize=9,
+    zorder=6,
 )
 annotation.set_visible(False)
 
@@ -258,30 +293,50 @@ start_date = min_date
 num_days = (max_date - start_date).days
 total_kilometers = sum(distances.values())
 
-# Add legend for activities with additional summary information
+# Right panel: activity legend on top, summary stats in a card below
 activity_counts = Counter(activities)
-legend_labels = [f"{activity} ({count})" for activity, count in activity_counts.items()]
-summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nGolf holes: {nbrOfHoles}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
-
+legend_handles = [
+    plt.Line2D([0], [0], marker='o', linestyle='none', label=f"{activity} ({count})",
+               markerfacecolor=activity_colors[activity], markeredgecolor='white',
+               markersize=8)
+    for activity, count in activity_counts.items()
+]
+legend_handles.append(
+    plt.Line2D([0], [0], color=INK, linewidth=2.2, label='7-day weight trend')
+)
 legend_ax.legend(
-    handles=[
-        plt.Line2D([0], [0], marker='o', color='w', label=label,
-                   markerfacecolor=activity_colors[activity], markersize=10)
-        for activity, label in zip(activity_counts.keys(), legend_labels)
-    ] + [plt.Line2D([0], [0], color='w', label=summary_label)],
+    handles=legend_handles,
     loc='upper left',
+    bbox_to_anchor=(0.0, 1.0),
     frameon=False,
-    handletextpad=0.5
+    handletextpad=0.6,
+    labelspacing=0.45,
+    fontsize=8.5,
+)
+
+summary_text = "\n".join([
+    f"Consistency   {num_activities}/{num_days} days",
+    f"Total km      {total_kilometers:.0f}",
+    f"Golf holes    {nbrOfHoles}",
+    f"Weight now    {currentWeight} kg",
+    f"Min / Max     {minWeight} / {maxWeight} kg",
+])
+legend_ax.text(
+    0.0, 0.0, summary_text,
+    transform=legend_ax.transAxes,
+    va='bottom', ha='left',
+    family='monospace', fontsize=8.5, color='#3a3f4a', linespacing=1.6,
+    bbox=dict(boxstyle='round,pad=0.6', fc='#f4f5f7', ec='#e2e5ea'),
 )
 
 # Set labels and title
-ax.set_xlabel('Date')
 ax.set_ylabel('Weight (kg)')
 
 # Set y-axis limits slightly beyond observed weights
 ax.set_ylim(min(weights) - 1, max(weights) + 1)
 
-ax.set_title('Weight Over Time with Activities')
+ax.set_title('Weight over time with activities', loc='left', fontsize=15,
+             fontweight='bold', color=INK, pad=14)
 
 # Configure x-axis ticks to show the first day of each month starting after the first activity
 def first_day_of_next_month(date_obj):
@@ -312,13 +367,17 @@ ax_pos = ax.get_position()
 slider_ax = fig.add_axes([ax_pos.x0, 0.08, ax_pos.width, 0.03])
 padded_start_num = mdates.date2num(x_axis_min)
 padded_end_num = mdates.date2num(x_axis_max)
+slider_ax.set_facecolor('#e9ebef')
 date_slider = RangeSlider(
     ax=slider_ax,
-    label='Date Range',
+    label='',
     valmin=padded_start_num,
     valmax=padded_end_num,
     valinit=(padded_start_num, padded_end_num),
+    color=INK,
 )
+date_slider.valtext.set_color(MUTED)
+date_slider.valtext.set_fontsize(9)
 
 def update_range(_):
     start_num, end_num = date_slider.val
