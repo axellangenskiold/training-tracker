@@ -15,6 +15,17 @@ def extract_number(text):
         raise ValueError(f"no number in {text.strip()!r}")
     return float(match.group())
 
+
+def rolling_average(sample_dates, values, window_days=7):
+    """Centered time-window average, smoothing day-to-day weigh-in noise."""
+    # ponytail: O(n^2) over weigh-ins, fine for a few hundred points
+    half = window_days / 2
+    return [
+        sum(v for d2, v in zip(sample_dates, values) if abs((d2 - d).days) <= half)
+        / sum(1 for d2 in sample_dates if abs((d2 - d).days) <= half)
+        for d in sample_dates
+    ]
+
 def read_data_from_file(filename):
     """Reads data from a file, skipping the first line."""
     data = []
@@ -70,6 +81,7 @@ dates = []
 weights = []
 distances = {}
 activities = []
+is_weighin = []
 year = None
 
 maxWeight = 0
@@ -107,6 +119,7 @@ for line_no, item in enumerate(data, start=2):  # data[] starts at file line 2
         activity = rest_parts[0].strip()
         value = rest_parts[1].strip() if len(rest_parts) > 1 else None
 
+        weighed = False
         if value is None:
             weight = last_weight
         elif activity == 'golf':
@@ -121,10 +134,12 @@ for line_no, item in enumerate(data, start=2):  # data[] starts at file line 2
             maxWeight = max(maxWeight, weight)
             minWeight = min(minWeight, weight)
             currentWeight = weight
+            weighed = True
 
         dates.append(f"{day.strip()}/{month.strip()}/{year}")
         weights.append(weight)  # may be None until the first weigh-in
         activities.append(activity)
+        is_weighin.append(weighed)
     except (ValueError, IndexError) as error:
         print(f"Skipping malformed line {line_no}: {item!r} ({error})")
 
@@ -176,6 +191,14 @@ ax.plot(dates, weights, linestyle='-', color='red', alpha=0.5)
 
 # Plot each point with the corresponding activity color
 ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities])
+
+# Overlay a 7-day rolling average of weigh-ins to show the bodyweight trend
+weighin_dates = [d for d, w in zip(dates, is_weighin) if w]
+weighin_weights = [wt for wt, w in zip(weights, is_weighin) if w]
+if len(weighin_dates) >= 2:
+    trend = rolling_average(weighin_dates, weighin_weights, window_days=7)
+    ax.plot(weighin_dates, trend, color='black', linewidth=2, zorder=4,
+            label='7-day weight trend')
 
 # Prepare annotation that follows the mouse based on closest weight
 annotation = ax.annotate(
