@@ -80,6 +80,7 @@ data = read_data_from_file(filename)
 dates = []
 weights = []
 distances = {}
+holes = {}
 activities = []
 is_weighin = []
 year = None
@@ -123,7 +124,8 @@ for line_no, item in enumerate(data, start=2):  # data[] starts at file line 2
         if value is None:
             weight = last_weight
         elif activity == 'golf':
-            nbrOfHoles += int(extract_number(value))
+            holes[len(activities)] = int(extract_number(value))
+            nbrOfHoles += holes[len(activities)]
             weight = last_weight
         elif activity in activities_dict:
             distances[len(activities)] = extract_number(value)
@@ -217,8 +219,10 @@ def format_annotation_text(index):
         f"Activity: {activities[index]}",
         f"Weight: {weights[index]} kg",
     ]
-    if activities[index] in ['löpning', 'run'] and index in distances:
+    if index in distances:
         base_text.append(f"Distance: {distances[index]} km")
+    if index in holes:
+        base_text.append(f"Holes: {holes[index]}")
     return "\n".join(base_text)
 
 def on_mouse_move(event):
@@ -257,7 +261,7 @@ total_kilometers = sum(distances.values())
 # Add legend for activities with additional summary information
 activity_counts = Counter(activities)
 legend_labels = [f"{activity} ({count})" for activity, count in activity_counts.items()]
-summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
+summary_label = f"Consistency: {num_activities}/{num_days} days\nTotal km: {total_kilometers:.2f}\nGolf holes: {nbrOfHoles}\nMax weight: {maxWeight}kg\nMin weight: {minWeight}kg\nCurrent weight: {currentWeight}kg"
 
 legend_ax.legend(
     handles=[
