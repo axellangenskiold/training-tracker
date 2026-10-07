@@ -16,16 +16,6 @@ def extract_number(text):
     return float(match.group())
 
 
-def rolling_average(sample_dates, values, window_days=7):
-    """Centered time-window average, smoothing day-to-day weigh-in noise."""
-    # ponytail: O(n^2) over weigh-ins, fine for a few hundred points
-    half = window_days / 2
-    return [
-        sum(v for d2, v in zip(sample_dates, values) if abs((d2 - d).days) <= half)
-        / sum(1 for d2 in sample_dates if abs((d2 - d).days) <= half)
-        for d in sample_dates
-    ]
-
 def read_data_from_file(filename):
     """Reads data from a file, skipping the first line."""
     data = []
@@ -151,6 +141,10 @@ if first_known is None:
     raise SystemExit("No weight entries found — nothing to plot.")
 weights = [first_known if w is None else w for w in weights]
 
+# Same-day entries share that day's weigh-in, whatever order they were logged in
+day_weight = {d: w for d, w, wi in zip(dates, weights, is_weighin) if wi}
+weights = [w if wi else day_weight.get(d, w) for d, w, wi in zip(dates, weights, is_weighin)]
+
 # Convert date strings to datetime objects
 dates = [datetime.strptime(date, '%d/%m/%Y') for date in dates]
 date_numbers = mdates.date2num(dates)
@@ -163,7 +157,7 @@ x_axis_min = min_date - pad_delta
 x_axis_max = max_date + pad_delta
 
 # Modern, clean theme
-INK = '#16181d'       # near-black for text / trend line
+INK = '#16181d'       # near-black for text / tooltip
 MUTED = '#8a909c'     # ticks and secondary text
 plt.rcParams.update({
     'figure.facecolor': '#f4f5f7',
@@ -217,23 +211,6 @@ ax.plot(dates, weights, linestyle='-', color='#c9cdd4', linewidth=1.0, zorder=1)
 ax.scatter(dates, weights, c=[activity_colors[activity] for activity in activities],
            s=30, edgecolor='white', linewidth=0.6, zorder=3)
 
-# Overlay a 7-day rolling average of weigh-ins to show the bodyweight trend
-weighin_dates = [d for d, w in zip(dates, is_weighin) if w]
-weighin_weights = [wt for wt, w in zip(weights, is_weighin) if w]
-if len(weighin_dates) >= 2:
-    trend = rolling_average(weighin_dates, weighin_weights, window_days=7)
-    # Break the line across long gaps (>21 days) instead of drawing a fake diagonal
-    seg_x, seg_y, prev = [], [], None
-    for d, t in zip(weighin_dates, trend):
-        if prev is not None and (d - prev).days > 21:
-            seg_x.append(prev)
-            seg_y.append(float('nan'))
-        seg_x.append(d)
-        seg_y.append(t)
-        prev = d
-    ax.plot(seg_x, seg_y, color=INK, linewidth=2.2, zorder=4,
-            solid_capstyle='round', label='7-day weight trend')
-
 # Prepare annotation that follows the mouse based on closest weight
 annotation = ax.annotate(
     "",
@@ -251,13 +228,18 @@ annotation.set_visible(False)
 def format_annotation_text(index):
     base_text = [
         f"Date: {dates[index].strftime('%Y-%m-%d')}",
-        f"Activity: {activities[index]}",
         f"Weight: {weights[index]} kg",
     ]
-    if index in distances:
-        base_text.append(f"Distance: {distances[index]} km")
-    if index in holes:
-        base_text.append(f"Holes: {holes[index]}")
+    # List every entry logged on this day, not just the hovered one
+    for i, d in enumerate(dates):
+        if d != dates[index]:
+            continue
+        line = f"Activity: {activities[i]}"
+        if i in distances:
+            line += f", {distances[i]} km"
+        if i in holes:
+            line += f", {holes[i]} holes"
+        base_text.append(line)
     return "\n".join(base_text)
 
 def on_mouse_move(event):
@@ -287,8 +269,7 @@ def on_mouse_move(event):
 
 fig.canvas.mpl_connect("motion_notify_event", on_mouse_move)
 
-# Calculate the number of activities, number of days, and total kilometers
-num_activities = len(activities)
+# Calculate the number of days and total kilometers
 start_date = min_date
 num_days = (max_date - start_date).days
 total_kilometers = sum(distances.values())
@@ -301,9 +282,6 @@ legend_handles = [
                markersize=8)
     for activity, count in activity_counts.items()
 ]
-legend_handles.append(
-    plt.Line2D([0], [0], color=INK, linewidth=2.2, label='7-day weight trend')
-)
 legend_ax.legend(
     handles=legend_handles,
     loc='upper left',
@@ -315,7 +293,7 @@ legend_ax.legend(
 )
 
 summary_text = "\n".join([
-    f"Consistency   {num_activities}/{num_days} days",
+    f"Consistency   {len(set(dates))}/{num_days + 1} days",
     f"Total km      {total_kilometers:.0f}",
     f"Golf holes    {nbrOfHoles}",
     f"Weight now    {currentWeight} kg",
